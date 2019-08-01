@@ -1,14 +1,18 @@
 '''
-Brian Perel
+Author @ Brian Perel
+Employee object structure to store and return info 
 '''
 
 # Employee class (EMPLOYEE MANAGEMENT SYSTEM)
 class Employee:
-    def __init__(self, name, id_number, department, title):
+    #print(__doc__)
+    def __init__(self, name, id_number, department, title, pay_rate, phone_number):
         self.__name = name
         self.__id_number = id_number
         self.__department = department
         self.__title = title
+        self.__pay_rate = pay_rate
+        self.__phone_number = phone_number
 
     def set_name(self, name):
         self.__name = name
@@ -21,6 +25,12 @@ class Employee:
 
     def set_title(self, title):
         self.__title = title
+
+    def set_pay_rate(self, pay_rate):
+        self.__pay_rate = pay_rate
+
+    def set_phone_number(self, phone_number):
+        self.__phone_number = phone_number 
     
     def get_name(self):
         return self.__name
@@ -34,10 +44,18 @@ class Employee:
     def get_title(self):
         return self.__title
 
+    def get_pay_rate(self):
+        return self.__pay_rate
+
+    def get_phone_number(self):
+        return self.__phone_number 
+
     def __str__(self):
-        result = 'Name: ' + self.get_name() + \
-                 '\nID number: ' + self.get_id_number() + \
+        result = 'ID number: ' + self.get_id_number() + \
+                 '\nName: ' + self.get_name() + \
                  '\nDepartment: ' + self.get_department() + \
-                 '\nTitle: ' + self.get_title()
+                 '\nTitle: ' + self.get_title() + \
+                 '\nPay rate: $' + self.get_pay_rate() + \
+                 '\nPhone number: ' + self.get_phone_number()
         return result
 
