@@ -6,13 +6,14 @@ Employee object structure to store and return info
 # Employee class (EMPLOYEE MANAGEMENT SYSTEM)
 class Employee:
     #print(__doc__)
-    def __init__(self, name, id_number, department, title, pay_rate, phone_number):
+    def __init__(self, name, id_number, department, title, pay_rate, phone_number, work_type):
         self.__name = name
         self.__id_number = id_number
         self.__department = department
         self.__title = title
         self.__pay_rate = pay_rate
         self.__phone_number = phone_number
+        self.__work_type = work_type 
 
     def set_name(self, name):
         self.__name = name
@@ -30,7 +31,10 @@ class Employee:
         self.__pay_rate = pay_rate
 
     def set_phone_number(self, phone_number):
-        self.__phone_number = phone_number 
+        self.__phone_number = phone_number
+
+    def set_work_type(self, work_type):
+        self.__work_type = work_type
     
     def get_name(self):
         return self.__name
@@ -48,7 +52,10 @@ class Employee:
         return self.__pay_rate
 
     def get_phone_number(self):
-        return self.__phone_number 
+        return self.__phone_number
+
+    def get_work_type(self):
+        return self.__work_type 
 
     def __str__(self):
         result = 'ID number: ' + self.get_id_number() + \
@@ -56,6 +63,6 @@ class Employee:
                  '\nDepartment: ' + self.get_department() + \
                  '\nTitle: ' + self.get_title() + \
                  '\nPay rate: $' + self.get_pay_rate() + \
-                 '\nPhone number: ' + self.get_phone_number()
+                 '\nPhone number: ' + self.get_phone_number() + \
+                 '\nEmployee Type: ' + self.get_work_type()
         return result
-
