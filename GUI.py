@@ -8,7 +8,8 @@ using a dictionary. Uses an employee class to set and get employee attributes.
 import tkinter as tk 
 import tkinter.messagebox
 import Employee_Management_System
-import mysql.connector 
+import mysql.connector
+
 
 class MyGUI:
     def __init__(self):
@@ -133,8 +134,9 @@ class MyGUI:
                                            command = self.reset_system)
         
 
-        self.quit_button = tk.Button(text='Quit Program', font = 'Courier 10', \
-                                          command=quit)
+        self.quit_button = tk.Button(text='Quit Program', font = 'Courier 10', command = quit)
+
+
 
         self.canvas = tk.Canvas(self.main_window, width=495, height=40, bd=0, \
                             borderwidth=0, bg='lightgrey', highlightthickness=0.5, \
@@ -142,8 +144,16 @@ class MyGUI:
 
         self.canvas.create_line(2, 25, 800, 25)
 
+        self.cb_var1 = tk.IntVar()
+        self.cb_var1.set(0)
+        self.conn_close = tk.Checkbutton(text='Close MySQL Connection', variable = self.cb_var1, bg='lightgrey')
+
+        if self.cb_var1.get() == 1:
+            self.mydb.close()
+
         # make program position and display
         self.header.place(x = 120, y = 0)
+        self.canvas.place(x = 10, y = 20)
         self.my_button1.place(x = 10, y = 65)
         self.label1.place(x = 203, y = 67)
         self.output_entry.place(x = 380, y = 67)        
@@ -163,8 +173,8 @@ class MyGUI:
         self.rb1.place(x = 240, y = 305)
         self.rb2.place(x = 380, y = 305)
         self.reset_button.place(x = 10, y = 225)
-        self.quit_button.place(x = 10, y = 265)
-        self.canvas.place(x = 10, y = 20)
+        self.quit_button.place(x = 10, y = 300)
+        self.conn_close.place(x = 10, y = 265)
        
 
 # App operations: 
@@ -214,8 +224,8 @@ class MyGUI:
 
             # ID, pay_rate, and phone_number should be given as strings
             int(ID)
-            int(pay_rate)
-            int(phone_number)
+            #int(pay_rate)
+            #int(phone_number)
             
             
         except ValueError as err:
@@ -235,7 +245,7 @@ class MyGUI:
 
         self.mycursor.execute('CREATE TABLE IF NOT EXISTS employees (id INT, \
                             name VARCHAR(30), dept VARCHAR(30), \
-                            title VARCHAR(30), pay_rate FLOAT(10,2), \
+                            title VARCHAR(30), pay_rate FLOAT(4,2), \
                             phone_number INT, work_type VARCHAR(30))')
 
 
