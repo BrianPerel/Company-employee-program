@@ -1,6 +1,7 @@
 '''
 Author @ Brian Perel
-Employee object structure to store and return info 
+Employee class, structured to store and return info
+on employees stored in employee dictionary stored in 2nd class 
 '''
 
 # Employee class (EMPLOYEE MANAGEMENT SYSTEM)
