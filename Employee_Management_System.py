@@ -67,3 +67,7 @@ class Employee:
                  '\nPhone number: ' + self.get_phone_number() + \
                  '\nEmployee Type: ' + self.get_work_type()
         return result
+
+    
+    def __del__(self):
+        print('Destructor called. Garbage collected.')
