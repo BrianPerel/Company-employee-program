@@ -29,7 +29,7 @@ class MyGUI:
             self.mydb = mysql.connector.connect(
                 host='localhost', user='root', passwd='')
 
-        self.mycursor = self.mydb.cursor()
+        self.mycursor = self.mydb.cursor(buffered=True)
         self.mycursor.execute('CREATE DATABASE IF NOT EXISTS employee_db')
         self.mycursor.execute('use employee_db')
         self.mycursor.execute('CREATE TABLE IF NOT EXISTS employees (id INT, \
@@ -308,9 +308,11 @@ class MyGUI:
             
             self.employees[ID] = new_emp
 
-            sql = 'UPDATE employees SET name=%s, dept=%s, title=%s, \
-            pay_rate=%s, phone_number=%s, work_type=%s WHERE id=%s'
-            val = ((name,), (dept,), (title,), (pay_rate,), (phone_number,), (work_type,), (ID,))
+            check = 'SELECT * FROM employees WHERE id=%s'
+            self.mycursor.execute(check, (ID,))
+
+            sql = 'UPDATE employees SET name=%s, dept=%s, title=%s, pay_rate=%s, phone_number=%s, work_type=%s WHERE id=%s'
+            val = (f'{name}', f'{dept}', f'{title}', f'{pay_rate}', f'{phone_number}', f'{work_type}', f'{ID}')
             self.mycursor.execute(sql, val)
             self.mydb.commit()
             print(self.mycursor.rowcount, 'record(s) updated')
