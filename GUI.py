@@ -201,11 +201,14 @@ class MyGUI:
         self.output_entry_var2.set(''), self.output_entry_var3.set('')
         self.output_entry_var4.set(''), self.output_entry_var5.set('')
 
-        sql = "SELECT * FROM employees WHERE id = %s"
-        self.mycursor.execute(sql, (ID,))
-        display = self.mycursor.fetchall()
-        for data in display:
-            print(data)
+        try:
+            sql = "SELECT * FROM employees WHERE id = %s"
+            self.mycursor.execute(sql, (ID,))
+            display = self.mycursor.fetchall()
+            for data in display:
+                print(data)
+        except mysql.connector.Error:
+            pass
             
     def add_employee(self):
         ''' function to add an employee to dictionary, by info gathered from GUI '''
@@ -224,8 +227,6 @@ class MyGUI:
 
             # ID, pay_rate, and phone_number should be given as strings
             int(ID)
-            #int(pay_rate)
-            #int(phone_number)
             
             
         except ValueError as err:
@@ -256,14 +257,15 @@ class MyGUI:
             self.employees[ID] = new_emp
             message = 'The new employee has been added'
             tk.messagebox.showinfo('Info', message)
-
+            
             sql = 'INSERT INTO employees (id, name, dept, title, \
             pay_rate, phone_number, work_type) values (%s, %s, %s, %s, %s, %s, %s)'
-            
+                
             val = (ID, name, dept, title, pay_rate, phone_number, work_type)
             self.mycursor.execute(sql, val)
             self.mydb.commit()
             print(self.mycursor.rowcount, 'record inserted')
+    
         elif ID == '' or name == '' or dept == '' or title == '' \
              or pay_rate == '' or phone_number == '' or work_type == '' \
              or check == False or len(ID) < 6 or len(ID) > 6:
