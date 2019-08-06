@@ -71,3 +71,5 @@ class Employee:
     
     def __del__(self):
         print('Destructor called. Garbage collected.')
+
+        
