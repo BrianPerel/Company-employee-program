@@ -1,24 +1,33 @@
 '''
 Author @ Brian Perel
 GUI Employee Management System
--> Python program that will store information\nabout employees in a company
-using a dictionary. Uses an employee class to set and get employee attributes. 
+-> Python program that will store information\nabout employees in a company using a dictionary.\nUses an employee class to set and get employee attributes. 
 '''
 
 import tkinter as tk 
 import tkinter.messagebox
 import Employee_Management_System
 import mysql.connector
+import sys as system 
+from datetime import * 
 
 
 class MyGUI:
     def __init__(self):
         ''' create and place main gui window, buttons, labels, entry's, canvas line '''
-        #print(__doc__)
+        print(__doc__)
         self.main_window = tk.Tk() # make the GUI window
         self.main_window.geometry('520x345') # width x height
         self.main_window.configure(background='lightgrey')
         self.main_window.title('Company')
+        print(system.copyright)
+        
+        today = datetime.today()
+        print('\nToday is: 0', today.day, '/0', today.month, '/', \
+              today.year, sep='')
+        print(today.strftime('%A'), today.strftime('%B'), \
+              str(today.day) + 'th,', today.year)
+        
 
         try:
             self.mydb = mysql.connector.connect(
@@ -229,7 +238,7 @@ class MyGUI:
             int(ID)
             
             
-        except ValueError as err:
+        except ValueError:
             check = False 
             tk.messagebox.showinfo('Info', 'Error!')
 
@@ -292,6 +301,7 @@ class MyGUI:
 
         except ValueError as err:
             check = False
+            
        
         if ID in self.employees:
             name, dept = self.output_entry1.get(), self.output_entry2.get()
@@ -378,4 +388,5 @@ class MyGUI:
         self.output_entry_var2.set(''), self.output_entry_var3.set('')
         self.output_entry_var4.set(''), self.output_entry_var5.set('')
                 
+            
 my_gui = MyGUI()
