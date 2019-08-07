@@ -8,7 +8,8 @@ import tkinter as tk
 import tkinter.messagebox
 import Employee_Management_System
 import mysql.connector
-import sys as system 
+import sys as system
+import re 
 from datetime import * 
 
 
@@ -21,20 +22,20 @@ class MyGUI:
         self.main_window.configure(background='lightgrey')
         self.main_window.title('Company')
         print(system.copyright)
-        
+
+        # create datetime object and use today() to assign the current date and time values 
         today = datetime.today()
         print('\nToday is: 0', today.day, '/0', today.month, '/', \
-              today.year, sep='')
+              today.year, sep='', end='. ')
         print(today.strftime('%A'), today.strftime('%B'), \
               str(today.day) + 'th,', today.year)
+        print('It\'s ', today.strftime('%I'), ':', today.strftime('%M'), today.strftime(' %p'), sep='')
         
-
         try:
             self.mydb = mysql.connector.connect(
                 host='localhost', user='root', passwd='', database='employee_db')
 
-
-        except Exception:
+        except mysql.connector.Error as err:
             self.mydb = mysql.connector.connect(
                 host='localhost', user='root', passwd='')
 
@@ -55,19 +56,17 @@ class MyGUI:
         self.my_button1 = tk.Button(text = 'Look Up Employee', \
                         command = self.look_up_employee, font = 'Courier 10')
 
-
         # GUI message displayed in window (Label)
         self.label1 = tk.Label(text = '\tEmployee ID:', font = 'Courier 10', \
                                                                bg='lightgrey')
 
-        # create a StringVar variable to stroe value input into entry box widget 
+        # create a StringVar variable to store value input into entry box widget 
         self.output_entry_var = tk.StringVar()
 
         # create an output box (GUI entry)
         self.output_entry = tk.Entry(width = 20, \
                                 textvariable = self.output_entry_var) 
         
-
         # GUI button
         self.my_button2 = tk.Button(text = 'Add New Employee',
                             font = 'Courier 10', \
@@ -82,7 +81,6 @@ class MyGUI:
         self.output_entry1 = tk.Entry(width = 20, \
                             textvariable = self.output_entry_var1)
 
-        
         # GUI button
         self.my_button3 = tk.Button(text = 'Update Employee', \
                                     font = 'Courier 10', \
@@ -96,7 +94,6 @@ class MyGUI:
         self.output_entry2 = tk.Entry(width = 20, \
                                 textvariable = self.output_entry_var2)
 
-        
         # GUI button
         self.my_button4 = tk.Button(text = 'Delete Employee', \
                                         font = 'Courier 10', \
@@ -136,16 +133,11 @@ class MyGUI:
         self.rb2 = tk.Radiobutton(text='Full Time Employee', variable=self.radio_var, \
                                     bg='lightgrey', value=2)
 
-        
-
         #GUI button
         self.reset_button = tk.Button(text='Reset System', font = 'Courier 10', \
                                            command = self.reset_system)
         
-
         self.quit_button = tk.Button(text='Quit Program', font = 'Courier 10', command = quit)
-
-
 
         self.canvas = tk.Canvas(self.main_window, width=495, height=40, bd=0, \
                             borderwidth=0, bg='lightgrey', highlightthickness=0.5, \
@@ -198,10 +190,8 @@ class MyGUI:
         # Get an employee ID number to look up.
         ID = self.output_entry.get()
 
-        if ID in self.employees:
-            message = self.employees.get(ID)
-        else:
-            message = 'No employee found of this ID'
+        # ternary operator 
+        message = self.employees.get(ID) if (ID in self.employees) else 'No employee found of this ID'
 
         tk.messagebox.showinfo('Employee Info', str(message))
 
@@ -216,15 +206,16 @@ class MyGUI:
             display = self.mycursor.fetchall()
             for data in display:
                 print(data)
-        except mysql.connector.Error:
-            pass
+        except mysql.connector.Error as err:
+            print(err)
             
     def add_employee(self):
         ''' function to add an employee to dictionary, by info gathered from GUI '''
         # get values from entry box widget
         check = True
         message = ''
-        work_type = '' 
+        work_type = ''
+        
         
         try:
             ID = self.output_entry.get()
@@ -233,14 +224,15 @@ class MyGUI:
             title = self.output_entry3.get()
             pay_rate = self.output_entry4.get()
             phone_number = self.output_entry5.get()
-
-            # ID, pay_rate, and phone_number should be given as strings
-            int(ID)
             
+            int(ID)
             
         except ValueError:
             check = False 
             tk.messagebox.showinfo('Info', 'Error!')
+
+
+        pattern = bool(re.match('[a-zA-Z]+', name))
 
         if self.radio_var.get() == 0:
             tk.messagebox.showinfo('Info', 'Error!')
@@ -258,11 +250,10 @@ class MyGUI:
                             title VARCHAR(30), pay_rate FLOAT(4,2), \
                             phone_number INT, work_type VARCHAR(30))')
 
-
         
         if ID not in self.employees and check and len(ID) == 6 and name != '' \
            and dept != '' and title != '' and pay_rate != '' \
-           and phone_number != '' and work_type != '':
+           and phone_number != '' and work_type != '' and pattern == True:
             self.employees[ID] = new_emp
             message = 'The new employee has been added'
             tk.messagebox.showinfo('Info', message)
@@ -277,7 +268,7 @@ class MyGUI:
     
         elif ID == '' or name == '' or dept == '' or title == '' \
              or pay_rate == '' or phone_number == '' or work_type == '' \
-             or check == False or len(ID) < 6 or len(ID) > 6:
+             or check == False or len(ID) < 6 or len(ID) > 6 or pattern == False:
             message = 'Error! Could not add employee.'
         elif ID in self.employees:
             message = 'An employee with that ID already exists'
@@ -336,7 +327,6 @@ class MyGUI:
         elif ID not in self.employees:
             message = 'No employee found of this ID'
 
-
         tk.messagebox.showinfo('Info', message)
 
         # set all entry widgets to a blank value
@@ -388,5 +378,4 @@ class MyGUI:
         self.output_entry_var2.set(''), self.output_entry_var3.set('')
         self.output_entry_var4.set(''), self.output_entry_var5.set('')
                 
-            
 my_gui = MyGUI()
