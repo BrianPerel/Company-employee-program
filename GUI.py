@@ -151,6 +151,7 @@ class MyGUI:
 
         if self.cb_var1.get() == 1:
             self.mydb.close()
+            print('Closed')
 
         # make program position and display
         self.header.place(x = 120, y = 0)
@@ -226,13 +227,18 @@ class MyGUI:
             phone_number = self.output_entry5.get()
             
             int(ID)
+            float(pay_rate)
+            int(phone_number)
+            
             
         except ValueError:
             check = False 
-            tk.messagebox.showinfo('Info', 'Error!')
 
 
-        pattern = bool(re.match('[a-zA-Z]+', name))
+        # use regular expressions to check format of info given 
+        pattern1 = bool(re.match('[a-zA-Z]+', name))
+        pattern2 = bool(re.match('[a-zA-Z]+', dept))
+        pattern3 = bool(re.match('[a-zA-Z]+', title))
 
         if self.radio_var.get() == 0:
             tk.messagebox.showinfo('Info', 'Error!')
@@ -251,12 +257,11 @@ class MyGUI:
                             phone_number INT, work_type VARCHAR(30))')
 
         
-        if ID not in self.employees and check and len(ID) == 6 and name != '' \
+        if ID not in self.employees and check == True and len(ID) == 6 and name != '' \
            and dept != '' and title != '' and pay_rate != '' \
-           and phone_number != '' and work_type != '' and pattern == True:
+           and phone_number != '' and work_type != '' and pattern1 == True and pattern2 == True and pattern3 == True:
             self.employees[ID] = new_emp
             message = 'The new employee has been added'
-            tk.messagebox.showinfo('Info', message)
             
             sql = 'INSERT INTO employees (id, name, dept, title, \
             pay_rate, phone_number, work_type) values (%s, %s, %s, %s, %s, %s, %s)'
@@ -268,10 +273,13 @@ class MyGUI:
     
         elif ID == '' or name == '' or dept == '' or title == '' \
              or pay_rate == '' or phone_number == '' or work_type == '' \
-             or check == False or len(ID) < 6 or len(ID) > 6 or pattern == False:
+             or check == False or len(ID) < 6 or len(ID) > 6 or pattern1 == False or pattern2 == False or pattern3 == False:
             message = 'Error! Could not add employee.'
         elif ID in self.employees:
             message = 'An employee with that ID already exists'
+
+        tk.messagebox.showinfo('Info', message)
+
 
         
         # set all entry widgets to a blank value
