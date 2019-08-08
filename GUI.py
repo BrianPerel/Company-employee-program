@@ -260,8 +260,8 @@ class MyGUI:
 
         self.mycursor.execute('CREATE TABLE IF NOT EXISTS employees (id INT, \
                             name VARCHAR(30), dept VARCHAR(30), \
-                            title VARCHAR(30), pay_rate FLOAT(4,2), \
-                            phone_number INT, work_type VARCHAR(30))')
+                            title VARCHAR(30), pay_rate VARCHAR(30), \
+                            phone_number VARCHAR(30), work_type VARCHAR(30))')
 
         
         if ID not in self.employees and check == True and len(ID) == 6 and name != '' \
@@ -271,6 +271,10 @@ class MyGUI:
            and dept_hasdigit == False and title_hasdigit == False:
             self.employees[ID] = new_emp
             message = 'The new employee has been added'
+
+            # add a $ to pay_rate before adding it to the table in database 
+            index = pay_rate.find(pay_rate)
+            pay_rate = pay_rate[:index] + '$' + pay_rate[index:]
             
             sql = 'INSERT INTO employees (id, name, dept, title, \
             pay_rate, phone_number, work_type) values (%s, %s, %s, %s, %s, %s, %s)'
@@ -278,7 +282,7 @@ class MyGUI:
             val = (ID, name, dept, title, pay_rate, phone_number, work_type)
             self.mycursor.execute(sql, val)
             self.mydb.commit()
-            print(self.mycursor.rowcount, 'record inserted')
+            print(self.mycursor.rowcount, 'record(s) inserted')
     
         elif ID == '' or name == '' or dept == '' or title == '' \
              or pay_rate == '' or phone_number == '' or work_type == '' \
@@ -390,7 +394,7 @@ class MyGUI:
             self.mycursor.execute('DROP TABLE employees')
             tk.messagebox.showinfo('Info', 'System has been reset, table deleted')
         except mysql.connector.Error as err:
-            tk.messagebox.showinfo('Info', 'Error, database not found')            
+            tk.messagebox.showinfo('Info', 'Error, database not found')
 
         # set all entry widgets to a blank value        
         self.output_entry_var.set(''), self.output_entry_var1.set('')
