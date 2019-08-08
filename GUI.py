@@ -9,11 +9,11 @@ import tkinter.messagebox
 import Employee_Management_System
 import mysql.connector
 import sys as system
-import re 
-from datetime import * 
+import re
+from datetime import *
 
 
-class MyGUI:
+class MyGUI:    
     def __init__(self):
         ''' create and place main gui window, buttons, labels, entry's, canvas line '''
         print(__doc__)
@@ -81,7 +81,7 @@ class MyGUI:
         self.output_entry1 = tk.Entry(width = 20, \
                             textvariable = self.output_entry_var1)
 
-        # GUI button
+        # GUI buttons
         self.my_button3 = tk.Button(text = 'Update Employee', \
                                     font = 'Courier 10', \
                                     command = self.update_employee)
@@ -94,7 +94,7 @@ class MyGUI:
         self.output_entry2 = tk.Entry(width = 20, \
                                 textvariable = self.output_entry_var2)
 
-        # GUI button
+        # GUI buttons
         self.my_button4 = tk.Button(text = 'Delete Employee', \
                                         font = 'Courier 10', \
                                         command = self.delete_employee)
@@ -133,7 +133,7 @@ class MyGUI:
         self.rb2 = tk.Radiobutton(text='Full Time Employee', variable=self.radio_var, \
                                     bg='lightgrey', value=2)
 
-        #GUI button
+        #GUI buttons
         self.reset_button = tk.Button(text='Reset System', font = 'Courier 10', \
                                            command = self.reset_system)
         
@@ -151,7 +151,6 @@ class MyGUI:
 
         if self.cb_var1.get() == 1:
             self.mydb.close()
-            print('Closed')
 
         # make program position and display
         self.header.place(x = 120, y = 0)
@@ -177,6 +176,7 @@ class MyGUI:
         self.reset_button.place(x = 10, y = 225)
         self.quit_button.place(x = 10, y = 300)
         self.conn_close.place(x = 10, y = 265)
+
        
 
 # App operations: 
@@ -209,6 +209,7 @@ class MyGUI:
                 print(data)
         except mysql.connector.Error as err:
             print(err)
+
             
     def add_employee(self):
         ''' function to add an employee to dictionary, by info gathered from GUI '''
@@ -216,6 +217,7 @@ class MyGUI:
         check = True
         message = ''
         work_type = ''
+        global count
         
         
         try:
@@ -234,18 +236,23 @@ class MyGUI:
         except ValueError:
             check = False 
 
-
         # use regular expressions to check format of info given 
         pattern1 = bool(re.match('[a-zA-Z]+', name))
+        name_hasdigit = any(item.isdigit() for item in name)
+        
         pattern2 = bool(re.match('[a-zA-Z]+', dept))
+        dept_hasdigit = any(item.isdigit() for item in dept)
+        
         pattern3 = bool(re.match('[a-zA-Z]+', title))
+        title_hasdigit = any(item.isdigit() for item in title)
 
-        if self.radio_var.get() == 0:
-            tk.messagebox.showinfo('Info', 'Error!')
-        elif self.radio_var.get() == 1:
+        #if self.radio_var.get() == 0:
+           # tk.messagebox.showinfo('Info', 'Error! Could not add employee.')
+        if self.radio_var.get() == 1:
             work_type = 'Part time'
         elif self.radio_var.get() == 2:
             work_type = 'Full time'
+
 
         # create instance and send the values 
         new_emp = Employee_Management_System.Employee(
@@ -259,7 +266,9 @@ class MyGUI:
         
         if ID not in self.employees and check == True and len(ID) == 6 and name != '' \
            and dept != '' and title != '' and pay_rate != '' \
-           and phone_number != '' and work_type != '' and pattern1 == True and pattern2 == True and pattern3 == True:
+           and phone_number != '' and work_type != '' and pattern1 == True \
+           and pattern2 == True and pattern3 == True and name_hasdigit == False \
+           and dept_hasdigit == False and title_hasdigit == False:
             self.employees[ID] = new_emp
             message = 'The new employee has been added'
             
@@ -273,13 +282,14 @@ class MyGUI:
     
         elif ID == '' or name == '' or dept == '' or title == '' \
              or pay_rate == '' or phone_number == '' or work_type == '' \
-             or check == False or len(ID) < 6 or len(ID) > 6 or pattern1 == False or pattern2 == False or pattern3 == False:
+             or check == False or len(ID) < 6 or len(ID) > 6 or pattern1 == False \
+             or pattern2 == False or pattern3 == False or name_hasdigit == True \
+             or dept_hasdigit == True or title_hasdigit == True:
             message = 'Error! Could not add employee.'
         elif ID in self.employees:
-            message = 'An employee with that ID already exists'
+            message = 'An employee with that ID already exists.'
 
         tk.messagebox.showinfo('Info', message)
-
 
         
         # set all entry widgets to a blank value
@@ -301,14 +311,13 @@ class MyGUI:
         except ValueError as err:
             check = False
             
-       
         if ID in self.employees:
             name, dept = self.output_entry1.get(), self.output_entry2.get()
             title, pay_rate = self.output_entry3.get(), self.output_entry4.get()
             phone_number = self.output_entry5.get()
 
             if self.radio_var.get() == 0:
-                tk.messagebox.showinfo('Info', 'Error!')
+                tk.messagebox.showinfo('Info', 'Error! couldn\'t update employees info.')
             elif self.radio_var.get() == 1:
                 work_type = 'Part time'
             elif self.radio_var.get() == 2:
@@ -321,7 +330,7 @@ class MyGUI:
 
             check = 'SELECT * FROM employees WHERE id=%s'
             self.mycursor.execute(check, (ID,))
-
+                
             sql = 'UPDATE employees SET name=%s, dept=%s, title=%s, pay_rate=%s, phone_number=%s, work_type=%s WHERE id=%s'
             val = (f'{name}', f'{dept}', f'{title}', f'{pay_rate}', f'{phone_number}', f'{work_type}', f'{ID}')
             self.mycursor.execute(sql, val)
@@ -331,7 +340,7 @@ class MyGUI:
             message = 'The new employee has been updated'
 
         elif check == False:
-            message = 'Error!'
+            message = 'Error! couldn\'t update employees info.'
         elif ID not in self.employees:
             message = 'No employee found of this ID'
 
@@ -350,19 +359,21 @@ class MyGUI:
         # get values from entry box widget 
         ID = self.output_entry.get()
 
-                
-        sql = "DELETE FROM employees WHERE id = %s"
-        self.mycursor.execute(sql, (ID,))
-        self.mydb.commit()
-        print(self.mycursor.rowcount, 'record(s) deleted')
+        try:       
+            sql = "DELETE FROM employees WHERE id = %s"
+            self.mycursor.execute(sql, (ID,))
+            self.mydb.commit()
+            print(self.mycursor.rowcount, 'record(s) deleted')
+
+        except mysql.connector.Error as err:
+            print(err)
 
         if ID in self.employees:
             del self.employees[ID]
             message = 'Employee information deleted'
         else:
             message = 'The specified ID number was not found'
-            
-        
+
         tk.messagebox.showinfo('Info', message)
         
         # set all entry widgets to a blank value
@@ -385,5 +396,7 @@ class MyGUI:
         self.output_entry_var.set(''), self.output_entry_var1.set('')
         self.output_entry_var2.set(''), self.output_entry_var3.set('')
         self.output_entry_var4.set(''), self.output_entry_var5.set('')
-                
+        self.radio_var.set(0)
+
+        
 my_gui = MyGUI()
