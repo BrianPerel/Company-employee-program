@@ -9,9 +9,12 @@ import tkinter.messagebox
 import Employee_Management_System
 import mysql.connector
 import sys as system
-import re
+import re, os
+import pickle
 from datetime import *
 
+global count
+count = 0
 
 class MyGUI:    
     def __init__(self):
@@ -139,6 +142,8 @@ class MyGUI:
         
         self.quit_button = tk.Button(text='Quit Program', font = 'Courier 10', command = quit)
 
+        self.load_button = tk.Button(text='Load File', font = 'Courier 10', command = self.load_file)
+
         self.canvas = tk.Canvas(self.main_window, width=495, height=40, bd=0, \
                             borderwidth=0, bg='lightgrey', highlightthickness=0.5, \
                             highlightbackground='lightgrey')
@@ -174,10 +179,20 @@ class MyGUI:
         self.rb1.place(x = 240, y = 305)
         self.rb2.place(x = 380, y = 305)
         self.reset_button.place(x = 10, y = 225)
-        self.quit_button.place(x = 10, y = 300)
+        self.quit_button.place(x = 110, y = 300)
+        self.load_button.place(x = 10, y = 300)
         self.conn_close.place(x = 10, y = 265)
 
-       
+        # if file exists, skip this process 
+        if os.path.isfile('Employees.dat'):
+            pass
+
+        else:
+            # create a new binary file to store binary object info, if one doesn't
+            # already exist in folder 
+            file_obj = open('Employees.dat', 'wb')
+            file_obj.close()
+
 
 # App operations: 
 
@@ -217,7 +232,6 @@ class MyGUI:
         check = True
         message = ''
         work_type = ''
-        global count
         
         
         try:
@@ -246,8 +260,7 @@ class MyGUI:
         pattern3 = bool(re.match('[a-zA-Z]+', title))
         title_hasdigit = any(item.isdigit() for item in title)
 
-        #if self.radio_var.get() == 0:
-           # tk.messagebox.showinfo('Info', 'Error! Could not add employee.')
+        
         if self.radio_var.get() == 1:
             work_type = 'Part time'
         elif self.radio_var.get() == 2:
@@ -257,6 +270,13 @@ class MyGUI:
         # create instance and send the values 
         new_emp = Employee_Management_System.Employee(
                     name, ID, dept, title, pay_rate, phone_number, work_type)
+
+        file_obj = open('Employees.dat', 'ab')
+        pickle.dump(new_emp, file_obj)
+        file_obj.close()
+
+        global count
+        count += 1
 
         self.mycursor.execute('CREATE TABLE IF NOT EXISTS employees (id INT, \
                             name VARCHAR(30), dept VARCHAR(30), \
@@ -389,6 +409,8 @@ class MyGUI:
         ''' function to reset app data, in case company leaves.
             This will delete all data in app and database ''' 
         self.employees = {}
+
+        os.remove('employees.dat')
         
         try:
             self.mycursor.execute('DROP TABLE employees')
@@ -401,6 +423,25 @@ class MyGUI:
         self.output_entry_var2.set(''), self.output_entry_var3.set('')
         self.output_entry_var4.set(''), self.output_entry_var5.set('')
         self.radio_var.set(0)
+
+
+    def load_file(self):
+        try:
+            file_obj = open('employees.dat', 'rb')
+            print('\n*** Employees ***')
+            print('File', file_obj.name, 'has been opened')
+
+            num = 0
+            while num < count:
+                print(pickle.load(file_obj))
+                print()
+                num += 1
+            file_obj.close()
+            
+        except FileNotFoundError as err:
+            print(err)
+
+    
 
         
 my_gui = MyGUI()
