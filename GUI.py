@@ -426,21 +426,25 @@ class MyGUI:
 
 
     def load_file(self):
-        try:
-            file_obj = open('employees.dat', 'rb')
-            print('\n*** Employees ***')
-            print('File', file_obj.name, 'has been opened')
 
-            num = 0
-            while num < count:
-                print()
-                print(pickle.load(file_obj))
-                num += 1
-            file_obj.close()
-            
-        except FileNotFoundError as err:
-            print(err)
+            try:
+                if os.stat('employees.dat').st_size == 0:
+                    print('File is empty')
 
+                else: 
+                    file_obj = open('employees.dat', 'rb')
+                    print('\n*** Employees ***')
+                    print('File', file_obj.name, 'has been opened')
+
+                    num = 0
+                    while num < count:
+                        print()
+                        print(pickle.load(file_obj))
+                        num += 1
+                    file_obj.close()
+                
+            except FileNotFoundError as err:
+                print(err)
     
 
         
