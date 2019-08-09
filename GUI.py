@@ -13,8 +13,10 @@ import re, os
 import pickle
 from datetime import *
 
+
 global count
 count = 0
+
 
 class MyGUI:    
     def __init__(self):
@@ -445,7 +447,6 @@ class MyGUI:
                 
             except FileNotFoundError as err:
                 print(err)
-    
-
+  
         
 my_gui = MyGUI()
