@@ -433,8 +433,8 @@ class MyGUI:
 
             num = 0
             while num < count:
-                print(pickle.load(file_obj))
                 print()
+                print(pickle.load(file_obj))
                 num += 1
             file_obj.close()
             
