@@ -13,7 +13,8 @@ import re, os
 import pickle
 from datetime import *
 
-
+# global variable to track 
+# num of add iterations for load function 
 global count
 count = 0
 
@@ -35,7 +36,8 @@ class MyGUI:
         print(today.strftime('%A'), today.strftime('%B'), \
               str(today.day) + 'th,', today.year)
         print('It\'s ', today.strftime('%I'), ':', today.strftime('%M'), today.strftime(' %p'), sep='')
-        
+
+        # connect to the database using credentials 
         try:
             self.mydb = mysql.connector.connect(
                 host='localhost', user='root', passwd='', database='employee_db')
@@ -44,6 +46,7 @@ class MyGUI:
             self.mydb = mysql.connector.connect(
                 host='localhost', user='root', passwd='')
 
+        # create the empty databaase and table 
         self.mycursor = self.mydb.cursor(buffered=True)
         self.mycursor.execute('CREATE DATABASE IF NOT EXISTS employee_db')
         self.mycursor.execute('use employee_db')
@@ -185,7 +188,7 @@ class MyGUI:
         self.load_button.place(x = 10, y = 300)
         self.conn_close.place(x = 10, y = 265)
 
-        # if file exists, skip this process 
+        # if file exists, skip this process; don't create a new file  
         if os.path.isfile('Employees.dat'):
             pass
 
@@ -232,9 +235,7 @@ class MyGUI:
         ''' function to add an employee to dictionary, by info gathered from GUI '''
         # get values from entry box widget
         check = True
-        message = ''
         work_type = ''
-        
         
         try:
             ID = self.output_entry.get()
@@ -252,7 +253,8 @@ class MyGUI:
         except ValueError:
             check = False 
 
-        # use regular expressions to check format of info given 
+        # use regular expressions to check format of info given
+        # name, dept, title should all only contain letters, nums are contained then mark 
         pattern1 = bool(re.match('[a-zA-Z]+', name))
         name_hasdigit = any(item.isdigit() for item in name)
         
@@ -316,7 +318,6 @@ class MyGUI:
             message = 'An employee with that ID already exists.'
 
         tk.messagebox.showinfo('Info', message)
-
         
         # set all entry widgets to a blank value
         self.output_entry_var.set(''), self.output_entry_var1.set('')
@@ -428,15 +429,18 @@ class MyGUI:
 
 
     def load_file(self):
-
+            ''' function to load binary file, data is automatically
+            saved from the last time app is used '''
             try:
                 if os.stat('employees.dat').st_size == 0:
                     print('File is empty')
+                    tk.messagebox.showinfo('Info', 'Error, file is empty')
 
                 else: 
                     file_obj = open('employees.dat', 'rb')
                     print('\n*** Employees ***')
-                    print('File', file_obj.name, 'has been opened')
+                    message = 'File \'' + file_obj.name + '\' has been opened'
+                    tk.messagebox.showinfo('Info', message)
 
                     num = 0
                     while num < count:
