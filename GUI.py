@@ -6,7 +6,7 @@ GUI Employee Management System
 
 import tkinter as tk 
 import tkinter.messagebox
-import Employee_Management_System
+import Employee_Management_System as EMS
 import mysql.connector
 import sys as system
 import re, os
@@ -198,6 +198,8 @@ class MyGUI:
             file_obj = open('Employees.dat', 'wb')
             file_obj.close()
 
+        self.main_window.mainloop()
+        
 
 # App operations: 
 
@@ -272,7 +274,7 @@ class MyGUI:
 
 
         # create instance and send the values 
-        new_emp = Employee_Management_System.Employee(
+        new_emp = EMS.Employee(
                     name, ID, dept, title, pay_rate, phone_number, work_type)
 
         file_obj = open('Employees.dat', 'ab')
@@ -350,7 +352,7 @@ class MyGUI:
             elif self.radio_var.get() == 2:
                 work_type = 'Full time'
 
-            new_emp = Employee_Management_System.Employee(name, ID, dept, \
+            new_emp = EMS.Employee(name, ID, dept, \
                                     title, pay_rate, phone_number, work_type)
             
             self.employees[ID] = new_emp
@@ -447,6 +449,7 @@ class MyGUI:
                         print()
                         print(pickle.load(file_obj))
                         num += 1
+                        
                     file_obj.close()
                 
             except FileNotFoundError as err:
