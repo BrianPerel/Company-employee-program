@@ -145,7 +145,7 @@ class MyGUI:
         self.reset_button = tk.Button(text='Reset System', font = 'Courier 10', \
                                            command = self.reset_system)
         
-        self.quit_button = tk.Button(text='Quit Program', font = 'Courier 10', command = quit)
+        self.quit_button = tk.Button(text='Quit Program', font = 'Courier 10', command = self.main_window.destroy)
 
         self.load_button = tk.Button(text='Load File', font = 'Courier 10', command = self.load_file)
 
@@ -199,6 +199,10 @@ class MyGUI:
             file_obj.close()
 
         self.main_window.mainloop()
+        
+        
+        
+        
         
 
 # App operations: 
