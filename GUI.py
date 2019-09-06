@@ -55,6 +55,7 @@ class MyGUI:
                             title VARCHAR(30), pay_rate FLOAT(10,2), \
                             phone_number INT, \
                             work_type VARCHAR(30))')
+        
 
         # create a GUI label (display EMPLOYEE MANAGEMENT SYSTEM) = the header of the GUI app
         self.header = tk.Label(text = 'EMPLOYEE MANAGEMENT SYSTEM',
@@ -199,9 +200,7 @@ class MyGUI:
             file_obj.close()
 
         self.main_window.mainloop()
-        
-        
-        
+
         
         
 
@@ -253,7 +252,6 @@ class MyGUI:
             
             int(ID)
             float(pay_rate)
-            int(phone_number)
             
             
         except ValueError:
