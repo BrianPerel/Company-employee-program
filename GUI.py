@@ -50,11 +50,11 @@ class MyGUI:
         self.mycursor = self.mydb.cursor(buffered=True)
         self.mycursor.execute('CREATE DATABASE IF NOT EXISTS employee_db')
         self.mycursor.execute('use employee_db')
-        self.mycursor.execute('CREATE TABLE IF NOT EXISTS employees (id INT, \
-                            name VARCHAR(30), dept VARCHAR(30),\
-                            title VARCHAR(30), pay_rate FLOAT(10,2), \
-                            phone_number INT, \
-                            work_type VARCHAR(30))')
+        self.mycursor.execute('CREATE TABLE IF NOT EXISTS employees (ID INT, \
+                            Name VARCHAR(30), Deptartment VARCHAR(30),\
+                            Title VARCHAR(30), Pay_Rate FLOAT(10,2), \
+                            Phone_Number VARCHAR(30), \
+                            Work_Type VARCHAR(30))')
         
 
         # create a GUI label (display EMPLOYEE MANAGEMENT SYSTEM) = the header of the GUI app
@@ -225,9 +225,10 @@ class MyGUI:
         self.output_entry_var.set(''), self.output_entry_var1.set('')
         self.output_entry_var2.set(''), self.output_entry_var3.set('')
         self.output_entry_var4.set(''), self.output_entry_var5.set('')
+        self.radio_var.set(0)
 
         try:
-            sql = "SELECT * FROM employees WHERE id = %s"
+            sql = "SELECT * FROM employees WHERE ID = %s"
             self.mycursor.execute(sql, (ID,))
             display = self.mycursor.fetchall()
             for data in display:
@@ -286,10 +287,12 @@ class MyGUI:
         global count
         count += 1
 
-        self.mycursor.execute('CREATE TABLE IF NOT EXISTS employees (id INT, \
-                            name VARCHAR(30), dept VARCHAR(30), \
-                            title VARCHAR(30), pay_rate VARCHAR(30), \
-                            phone_number VARCHAR(30), work_type VARCHAR(30))')
+        self.mycursor.execute('CREATE TABLE IF NOT EXISTS employees (ID INT, \
+                            Name VARCHAR(30), Deptartment VARCHAR(30), \
+                            Title VARCHAR(30), Pay_Rate VARCHAR(30), \
+                            Phone_Number VARCHAR(30), Work_Type VARCHAR(30))')
+
+
 
         
         if ID not in self.employees and check == True and len(ID) == 6 and name != '' \
@@ -304,8 +307,8 @@ class MyGUI:
             index = pay_rate.find(pay_rate)
             pay_rate = pay_rate[:index] + '$' + pay_rate[index:]
             
-            sql = 'INSERT INTO employees (id, name, dept, title, \
-            pay_rate, phone_number, work_type) values (%s, %s, %s, %s, %s, %s, %s)'
+            sql = 'INSERT INTO employees (ID, Name, Deptartment, Title, \
+            Pay_Rate, Phone_Number, Work_Type) values (%s, %s, %s, %s, %s, %s, %s)'
                 
             val = (ID, name, dept, title, pay_rate, phone_number, work_type)
             self.mycursor.execute(sql, val)
@@ -359,10 +362,10 @@ class MyGUI:
             
             self.employees[ID] = new_emp
 
-            check = 'SELECT * FROM employees WHERE id=%s'
+            check = 'SELECT * FROM employees WHERE ID = %s'
             self.mycursor.execute(check, (ID,))
                 
-            sql = 'UPDATE employees SET name=%s, dept=%s, title=%s, pay_rate=%s, phone_number=%s, work_type=%s WHERE id=%s'
+            sql = 'UPDATE employees SET Name=%s, Deptartment=%s, Title=%s, Pay_Rate=%s, Phone_Number=%s, Work_Type=%s WHERE ID=%s'
             val = (f'{name}', f'{dept}', f'{title}', f'{pay_rate}', f'{phone_number}', f'{work_type}', f'{ID}')
             self.mycursor.execute(sql, val)
             self.mydb.commit()
@@ -391,7 +394,7 @@ class MyGUI:
         ID = self.output_entry.get()
 
         try:       
-            sql = "DELETE FROM employees WHERE id = %s"
+            sql = "DELETE FROM employees WHERE ID = %s"
             self.mycursor.execute(sql, (ID,))
             self.mydb.commit()
             print(self.mycursor.rowcount, 'record(s) deleted')
@@ -411,19 +414,22 @@ class MyGUI:
         self.output_entry_var.set(''), self.output_entry_var1.set('')
         self.output_entry_var2.set(''), self.output_entry_var3.set('')
         self.output_entry_var4.set(''), self.output_entry_var5.set('')
+        self.radio_var.set(0)
 
     def reset_system(self):
         ''' function to reset app data, in case company leaves.
             This will delete all data in app and database ''' 
-        self.employees = {}
+        self.employees = {}            
 
-        os.remove('employees.dat')
         
         try:
+            os.remove('employees.dat')
             self.mycursor.execute('DROP TABLE employees')
-            tk.messagebox.showinfo('Info', 'System has been reset, table deleted')
+            tk.messagebox.showinfo('Info', 'System has been reset, table and employees.dat deleted')
         except mysql.connector.Error as err:
-            tk.messagebox.showinfo('Info', 'Error, database not found')
+            tk.messagebox.showinfo('Info', 'Error, database not found, file not found')
+        except FileNotFoundError:
+            tk.messagebox.showinfo('Info', 'Error, file not found')
 
         # set all entry widgets to a blank value        
         self.output_entry_var.set(''), self.output_entry_var1.set('')
