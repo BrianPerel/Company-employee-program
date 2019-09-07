@@ -37,7 +37,7 @@ class MyGUI:
               str(today.day) + 'th,', today.year)
         print('It\'s ', today.strftime('%I'), ':', today.strftime('%M'), today.strftime(' %p'), sep='')
 
-        # connect to the database using credentials 
+         # connect to the database using credentials 
         try:
             self.mydb = mysql.connector.connect(
                 host='localhost', user='root', passwd='', database='employee_db')
@@ -201,7 +201,9 @@ class MyGUI:
 
         self.main_window.mainloop()
 
-        
+
+
+
         
 
 # App operations: 
@@ -292,8 +294,6 @@ class MyGUI:
                             Title VARCHAR(30), Pay_Rate VARCHAR(30), \
                             Phone_Number VARCHAR(30), Work_Type VARCHAR(30))')
 
-
-
         
         if ID not in self.employees and check == True and len(ID) == 6 and name != '' \
            and dept != '' and title != '' and pay_rate != '' \
@@ -320,7 +320,7 @@ class MyGUI:
              or check == False or len(ID) < 6 or len(ID) > 6 or pattern1 == False \
              or pattern2 == False or pattern3 == False or name_hasdigit == True \
              or dept_hasdigit == True or title_hasdigit == True:
-            message = 'Error! Could not add employee.'
+            message = 'Could not add employee.'
         elif ID in self.employees:
             message = 'An employee with that ID already exists.'
 
@@ -351,7 +351,7 @@ class MyGUI:
             phone_number = self.output_entry5.get()
 
             if self.radio_var.get() == 0:
-                tk.messagebox.showinfo('Info', 'Error! couldn\'t update employees info.')
+                tk.messagebox.showinfo('Info', 'Couldn\'t update employees info')
             elif self.radio_var.get() == 1:
                 work_type = 'Part time'
             elif self.radio_var.get() == 2:
@@ -374,7 +374,7 @@ class MyGUI:
             message = 'The new employee has been updated'
 
         elif check == False:
-            message = 'Error! couldn\'t update employees info.'
+            message = 'Couldn\'t update employees info.'
         elif ID not in self.employees:
             message = 'No employee found of this ID'
 
@@ -423,13 +423,13 @@ class MyGUI:
 
         
         try:
-            os.remove('employees.dat')
             self.mycursor.execute('DROP TABLE employees')
+            os.remove('employees.dat')
             tk.messagebox.showinfo('Info', 'System has been reset, table and employees.dat deleted')
         except mysql.connector.Error as err:
-            tk.messagebox.showinfo('Info', 'Error, database not found, file not found')
+            tk.messagebox.showinfo('Info', 'Database not found, file not found')
         except FileNotFoundError:
-            tk.messagebox.showinfo('Info', 'Error, file not found')
+            tk.messagebox.showinfo('Info', 'File not found')
 
         # set all entry widgets to a blank value        
         self.output_entry_var.set(''), self.output_entry_var1.set('')
@@ -441,27 +441,27 @@ class MyGUI:
     def load_file(self):
             ''' function to load binary file, data is automatically
             saved from the last time app is used '''
+            
             try:
                 if os.stat('employees.dat').st_size == 0:
-                    print('File is empty')
-                    tk.messagebox.showinfo('Info', 'Error, file is empty')
+                    message = 'File is empty'
+                    tk.messagebox.showinfo('Info', message)
 
                 else: 
                     file_obj = open('employees.dat', 'rb')
-                    print('\n*** Employees ***')
-                    message = 'File \'' + file_obj.name + '\' has been opened'
-                    tk.messagebox.showinfo('Info', message)
 
                     num = 0
                     while num < count:
-                        print()
-                        print(pickle.load(file_obj))
+                        message = pickle.load(file_obj)
+                        info = file_obj.name + (' - employee #' + str(num+1))
+                        tk.messagebox.showinfo(info, message)
                         num += 1
                         
                     file_obj.close()
                 
             except FileNotFoundError as err:
                 print(err)
+                tk.messagebox.showinfo('Info', 'File not found')
   
         
 my_gui = MyGUI()
