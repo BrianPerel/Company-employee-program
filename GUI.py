@@ -22,22 +22,12 @@ count = 0
 class MyGUI:    
     def __init__(self):
         ''' create and place main gui window, buttons, labels, entry's, canvas line '''
-        print(__doc__)
         self.main_window = tk.Tk() # make the GUI window
         self.main_window.geometry('520x345') # width x height
         self.main_window.configure(background='lightgrey')
         self.main_window.title('Company')
-        print(system.copyright)
 
-        # create datetime object and use today() to assign the current date and time values 
-        today = datetime.today()
-        print('\nToday is: 0', today.day, '/0', today.month, '/', \
-              today.year, sep='', end='. ')
-        print(today.strftime('%A'), today.strftime('%B'), \
-              str(today.day) + 'th,', today.year)
-        print('It\'s ', today.strftime('%I'), ':', today.strftime('%M'), today.strftime(' %p'), sep='')
-
-         # connect to the database using credentials 
+        # connect to the database using credentials 
         try:
             self.mydb = mysql.connector.connect(
                 host='localhost', user='root', passwd='', database='employee_db')
@@ -234,9 +224,10 @@ class MyGUI:
             self.mycursor.execute(sql, (ID,))
             display = self.mycursor.fetchall()
             for data in display:
-                print(data)
+                pass
+
         except mysql.connector.Error as err:
-            print(err)
+            pass
 
             
     def add_employee(self):
@@ -313,7 +304,7 @@ class MyGUI:
             val = (ID, name, dept, title, pay_rate, phone_number, work_type)
             self.mycursor.execute(sql, val)
             self.mydb.commit()
-            print(self.mycursor.rowcount, 'record(s) inserted')
+
     
         elif ID == '' or name == '' or dept == '' or title == '' \
              or pay_rate == '' or phone_number == '' or work_type == '' \
@@ -369,7 +360,6 @@ class MyGUI:
             val = (f'{name}', f'{dept}', f'{title}', f'{pay_rate}', f'{phone_number}', f'{work_type}', f'{ID}')
             self.mycursor.execute(sql, val)
             self.mydb.commit()
-            print(self.mycursor.rowcount, 'record(s) updated')
             
             message = 'The new employee has been updated'
 
@@ -397,10 +387,9 @@ class MyGUI:
             sql = "DELETE FROM employees WHERE ID = %s"
             self.mycursor.execute(sql, (ID,))
             self.mydb.commit()
-            print(self.mycursor.rowcount, 'record(s) deleted')
 
         except mysql.connector.Error as err:
-            print(err)
+            pass
 
         if ID in self.employees:
             del self.employees[ID]
@@ -460,7 +449,6 @@ class MyGUI:
                     file_obj.close()
                 
             except FileNotFoundError as err:
-                print(err)
                 tk.messagebox.showinfo('Info', 'File not found')
   
         
