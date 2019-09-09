@@ -23,7 +23,7 @@ class MyGUI:
     def __init__(self):
         ''' create and place main gui window, buttons, labels, entry's, canvas line '''
         self.main_window = tk.Tk() # make the GUI window
-        self.main_window.geometry('520x345') # width x height
+        self.main_window.geometry('520x390') # width x height
         self.main_window.configure(background='lightgrey')
         self.main_window.title('Company')
 
@@ -50,6 +50,12 @@ class MyGUI:
         # create a GUI label (display EMPLOYEE MANAGEMENT SYSTEM) = the header of the GUI app
         self.header = tk.Label(text = 'EMPLOYEE MANAGEMENT SYSTEM',
                                font = 'Times 12 bold', bg='lightgrey')
+
+        self.canvas = tk.Canvas(self.main_window, width=495, height=40, bd=0, \
+                            borderwidth=0, bg='lightgrey', highlightthickness=0.5, \
+                            highlightbackground='lightgrey')
+
+        self.canvas.create_line(2, 25, 800, 25)
                 
         # GUI button 1
         self.my_button1 = tk.Button(text = 'Look Up Employee', \
@@ -140,11 +146,16 @@ class MyGUI:
 
         self.load_button = tk.Button(text='Load File', font = 'Courier 10', command = self.load_file)
 
-        self.canvas = tk.Canvas(self.main_window, width=495, height=40, bd=0, \
+        self.canvas2 = tk.Canvas(self.main_window, width=495, height=40, bd=0, \
                             borderwidth=0, bg='lightgrey', highlightthickness=0.5, \
                             highlightbackground='lightgrey')
 
-        self.canvas.create_line(2, 25, 800, 25)
+        self.canvas2.create_line(2, 25, 800, 25)
+
+
+        self.label7 = tk.Label(text = 'developed by Brian Perel', font = 'Courier 10', \
+                                                        bg='lightgrey')
+
 
         self.cb_var1 = tk.IntVar()
         self.cb_var1.set(0)
@@ -178,6 +189,8 @@ class MyGUI:
         self.quit_button.place(x = 110, y = 300)
         self.load_button.place(x = 10, y = 300)
         self.conn_close.place(x = 10, y = 265)
+        self.canvas2.place(x = 10, y = 328)
+        self.label7.place(x = 160, y = 360)
 
         # if file exists, skip this process; don't create a new file  
         if os.path.isfile('Employees.dat'):
