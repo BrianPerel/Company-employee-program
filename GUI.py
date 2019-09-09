@@ -8,15 +8,8 @@ import tkinter as tk
 import tkinter.messagebox
 import Employee_Management_System as EMS
 import mysql.connector
-import sys as system
 import re, os
 import pickle
-from datetime import *
-
-# global variable to track 
-# num of add iterations for load function 
-global count
-count = 0
 
 
 class MyGUI:    
@@ -274,7 +267,6 @@ class MyGUI:
         
         pattern3 = bool(re.match('[a-zA-Z]+', title))
         title_hasdigit = any(item.isdigit() for item in title)
-
         
         if self.radio_var.get() == 1:
             work_type = 'Part time'
@@ -286,20 +278,13 @@ class MyGUI:
         new_emp = EMS.Employee(
                     name, ID, dept, title, pay_rate, phone_number, work_type)
 
-        file_obj = open('Employees.dat', 'ab')
-        pickle.dump(new_emp, file_obj)
-        file_obj.close()
-
-        global count
-        count += 1
-
         self.mycursor.execute('CREATE TABLE IF NOT EXISTS employees (ID INT, \
                             Name VARCHAR(30), Deptartment VARCHAR(30), \
                             Title VARCHAR(30), Pay_Rate VARCHAR(30), \
                             Phone_Number VARCHAR(30), Work_Type VARCHAR(30))')
 
         
-        if ID not in self.employees and check == True and len(ID) == 6 and name != '' \
+        if ID not in self.employees and len(phone_number) == 12 and check == True and len(ID) == 6 and name != '' \
            and dept != '' and title != '' and pay_rate != '' \
            and phone_number != '' and work_type != '' and pattern1 == True \
            and pattern2 == True and pattern3 == True and name_hasdigit == False \
@@ -310,6 +295,12 @@ class MyGUI:
             # add a $ to pay_rate before adding it to the table in database 
             index = pay_rate.find(pay_rate)
             pay_rate = pay_rate[:index] + '$' + pay_rate[index:]
+
+            file_obj = open('Employees.dat', 'ab')
+            pickle.dump(new_emp, file_obj)
+            
+            file_obj.close()
+
             
             sql = 'INSERT INTO employees (ID, Name, Deptartment, Title, \
             Pay_Rate, Phone_Number, Work_Type) values (%s, %s, %s, %s, %s, %s, %s)'
@@ -323,7 +314,7 @@ class MyGUI:
              or pay_rate == '' or phone_number == '' or work_type == '' \
              or check == False or len(ID) < 6 or len(ID) > 6 or pattern1 == False \
              or pattern2 == False or pattern3 == False or name_hasdigit == True \
-             or dept_hasdigit == True or title_hasdigit == True:
+             or dept_hasdigit == True or title_hasdigit == True or len(phone_number) != 12:
             message = 'Could not add employee.'
         elif ID in self.employees:
             message = 'An employee with that ID already exists.'
@@ -451,15 +442,17 @@ class MyGUI:
 
                 else: 
                     file_obj = open('employees.dat', 'rb')
+                    content = pickle.load(file_obj)
 
-                    num = 0
-                    while num < count:
-                        message = pickle.load(file_obj)
-                        info = file_obj.name + (' - employee #' + str(num+1))
-                        tk.messagebox.showinfo(info, message)
-                        num += 1
+                    try:
+                        while content != ' ':
+                            tk.messagebox.showinfo('Info', content)
+                            content = pickle.load(file_obj)
+                            
+                        file_obj.close()
                         
-                    file_obj.close()
+                    except EOFError as err:
+                        pass
                 
             except FileNotFoundError as err:
                 tk.messagebox.showinfo('Info', 'File not found')
