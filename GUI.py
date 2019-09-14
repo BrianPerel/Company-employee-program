@@ -35,7 +35,7 @@ class MyGUI:
         self.mycursor.execute('use employee_db')
         self.mycursor.execute('CREATE TABLE IF NOT EXISTS employees (ID INT, \
                             Name VARCHAR(30), Deptartment VARCHAR(30),\
-                            Title VARCHAR(30), Pay_Rate FLOAT(10,2), \
+                            Title VARCHAR(30), Pay_Rate VARCHAR(30), \
                             Phone_Number VARCHAR(30), \
                             Work_Type VARCHAR(30))')
         
@@ -272,6 +272,9 @@ class MyGUI:
             work_type = 'Part time'
         elif self.radio_var.get() == 2:
             work_type = 'Full time'
+
+        pay_rate = format(float(pay_rate), '.2f')
+        pay_rate = str(pay_rate)
 
 
         # create instance and send the values 
