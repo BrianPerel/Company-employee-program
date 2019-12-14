@@ -19,25 +19,6 @@ class MyGUI:
         self.main_window.geometry('520x390') # width x height
         self.main_window.configure(background='lightgrey')
         self.main_window.title('Company')
-
-        # connect to the database using credentials 
-        try:
-            self.mydb = mysql.connector.connect(
-                host='localhost', user='root', passwd='', database='employee_db')
-
-        except mysql.connector.Error as err:
-            self.mydb = mysql.connector.connect(
-                host='localhost', user='root', passwd='')
-
-        # create the empty databaase and table 
-        self.mycursor = self.mydb.cursor(buffered=True)
-        self.mycursor.execute('CREATE DATABASE IF NOT EXISTS employee_db')
-        self.mycursor.execute('use employee_db')
-        self.mycursor.execute('CREATE TABLE IF NOT EXISTS employees (ID INT, \
-                            Name VARCHAR(30), Deptartment VARCHAR(30),\
-                            Title VARCHAR(30), Pay_Rate VARCHAR(30), \
-                            Phone_Number VARCHAR(30), \
-                            Work_Type VARCHAR(30))')
         
 
         # create a GUI label (display EMPLOYEE MANAGEMENT SYSTEM) = the header of the GUI app
@@ -202,13 +183,36 @@ class MyGUI:
 
         
 
-# App operations: 
+# App operations:
+
+    
 
     # create the empty dictionary
     employees = {}
 
 
     def look_up_employee(self):
+
+        # connect to the database using credentials 
+        try:
+            self.mydb = mysql.connector.connect(
+                host='localhost', user='root', passwd='', database='employee_db')
+
+        except mysql.connector.Error as err:
+            self.mydb = mysql.connector.connect(
+                host='loclhost', user='root', passwd='')
+
+        # create the empty databaase and table 
+        self.mycursor = self.mydb.cursor(buffered=True)
+        self.mycursor.execute('CREATE DATABASE IF NOT EXISTS b15_24632681_employee_db')
+        self.mycursor.execute('use b15_24632681_employee_db')
+        self.mycursor.execute('CREATE TABLE IF NOT EXISTS employees (ID INT, \
+                            Name VARCHAR(30), Deptartment VARCHAR(30),\
+                            Title VARCHAR(30), Pay_Rate VARCHAR(30), \
+                            Phone_Number VARCHAR(30), \
+                            Work_Type VARCHAR(30))')
+
+    
         ''' function to look up an employee's info in dictionary,
         by the ID attained from GUI '''
         # Get an employee ID number to look up.
@@ -237,6 +241,26 @@ class MyGUI:
 
             
     def add_employee(self):
+
+        # connect to the database using credentials 
+        try:
+            self.mydb = mysql.connector.connect(
+                host='localhost', user='root', passwd='', database='employee_db')
+
+        except mysql.connector.Error as err:
+            self.mydb = mysql.connector.connect(
+                host='loclhost', user='root', passwd='')
+
+        # create the empty databaase and table 
+        self.mycursor = self.mydb.cursor(buffered=True)
+        self.mycursor.execute('CREATE DATABASE IF NOT EXISTS b15_24632681_employee_db')
+        self.mycursor.execute('use b15_24632681_employee_db')
+        self.mycursor.execute('CREATE TABLE IF NOT EXISTS employees (ID INT, \
+                            Name VARCHAR(30), Deptartment VARCHAR(30),\
+                            Title VARCHAR(30), Pay_Rate VARCHAR(30), \
+                            Phone_Number VARCHAR(30), \
+                            Work_Type VARCHAR(30))')
+        
         ''' function to add an employee to dictionary, by info gathered from GUI '''
         # get values from entry box widget
         check = True
@@ -331,6 +355,26 @@ class MyGUI:
         self.radio_var.set(0)
 
     def update_employee(self):
+
+        # connect to the database using credentials 
+        try:
+            self.mydb = mysql.connector.connect(
+                host='localhost', user='root', passwd='', database='employee_db')
+
+        except mysql.connector.Error as err:
+            self.mydb = mysql.connector.connect(
+                host='loclhost', user='root', passwd='')
+
+        # create the empty databaase and table 
+        self.mycursor = self.mydb.cursor(buffered=True)
+        self.mycursor.execute('CREATE DATABASE IF NOT EXISTS b15_24632681_employee_db')
+        self.mycursor.execute('use b15_24632681_employee_db')
+        self.mycursor.execute('CREATE TABLE IF NOT EXISTS employees (ID INT, \
+                            Name VARCHAR(30), Deptartment VARCHAR(30),\
+                            Title VARCHAR(30), Pay_Rate VARCHAR(30), \
+                            Phone_Number VARCHAR(30), \
+                            Work_Type VARCHAR(30))')
+        
         ''' function to update an already existing employee's info
             in dictionary, by attaining info from GUI '''
         message = ''
@@ -385,6 +429,26 @@ class MyGUI:
 
         
     def delete_employee(self):
+
+        # connect to the database using credentials 
+        try:
+            self.mydb = mysql.connector.connect(
+                host='localhost', user='root', passwd='', database='employee_db')
+
+        except mysql.connector.Error as err:
+            self.mydb = mysql.connector.connect(
+                host='loclhost', user='root', passwd='')
+
+        # create the empty databaase and table 
+        self.mycursor = self.mydb.cursor(buffered=True)
+        self.mycursor.execute('CREATE DATABASE IF NOT EXISTS b15_24632681_employee_db')
+        self.mycursor.execute('use b15_24632681_employee_db')
+        self.mycursor.execute('CREATE TABLE IF NOT EXISTS employees (ID INT, \
+                            Name VARCHAR(30), Deptartment VARCHAR(30),\
+                            Title VARCHAR(30), Pay_Rate VARCHAR(30), \
+                            Phone_Number VARCHAR(30), \
+                            Work_Type VARCHAR(30))')
+        
         ''' function to delete an employee from app, by locating it
             by ID in dictionary '''
         # get values from entry box widget 
@@ -413,6 +477,26 @@ class MyGUI:
         self.radio_var.set(0)
 
     def reset_system(self):
+
+        # connect to the database using credentials 
+        try:
+            self.mydb = mysql.connector.connect(
+                host='localhost', user='root', passwd='', database='employee_db')
+
+        except mysql.connector.Error as err:
+            self.mydb = mysql.connector.connect(
+                host='loclhost', user='root', passwd='')
+
+        # create the empty databaase and table 
+        self.mycursor = self.mydb.cursor(buffered=True)
+        self.mycursor.execute('CREATE DATABASE IF NOT EXISTS b15_24632681_employee_db')
+        self.mycursor.execute('use b15_24632681_employee_db')
+        self.mycursor.execute('CREATE TABLE IF NOT EXISTS employees (ID INT, \
+                            Name VARCHAR(30), Deptartment VARCHAR(30),\
+                            Title VARCHAR(30), Pay_Rate VARCHAR(30), \
+                            Phone_Number VARCHAR(30), \
+                            Work_Type VARCHAR(30))')
+        
         ''' function to reset app data, in case company leaves.
             This will delete all data in app and database ''' 
         self.employees = {}            
@@ -435,30 +519,50 @@ class MyGUI:
 
 
     def load_file(self):
-            ''' function to load binary file, data is automatically
-            saved from the last time app is used '''
-            
-            try:
-                if os.stat('employees.dat').st_size == 0:
-                    message = 'File is empty'
-                    tk.messagebox.showinfo('Info', message)
+        # connect to the database using credentials 
+        try:
+            self.mydb = mysql.connector.connect(
+                host='localhost', user='root', passwd='', database='employee_db')
 
-                else: 
-                    file_obj = open('employees.dat', 'rb')
-                    content = pickle.load(file_obj)
+        except mysql.connector.Error as err:
+            self.mydb = mysql.connector.connect(
+                host='loclhost', user='root', passwd='')
 
-                    try:
-                        while content != ' ':
-                            tk.messagebox.showinfo('Info', content)
-                            content = pickle.load(file_obj)
-                            
-                        file_obj.close()
+        # create the empty databaase and table 
+        self.mycursor = self.mydb.cursor(buffered=True)
+        self.mycursor.execute('CREATE DATABASE IF NOT EXISTS b15_24632681_employee_db')
+        self.mycursor.execute('use b15_24632681_employee_db')
+        self.mycursor.execute('CREATE TABLE IF NOT EXISTS employees (ID INT, \
+                            Name VARCHAR(30), Deptartment VARCHAR(30),\
+                            Title VARCHAR(30), Pay_Rate VARCHAR(30), \
+                            Phone_Number VARCHAR(30), \
+                            Work_Type VARCHAR(30))')
+        
+        
+        ''' function to load binary file, data is automatically
+        saved from the last time app is used '''
+        
+        try:
+            if os.stat('employees.dat').st_size == 0:
+                message = 'File is empty'
+                tk.messagebox.showinfo('Info', message)
+
+            else: 
+                file_obj = open('employees.dat', 'rb')
+                content = pickle.load(file_obj)
+
+                try:
+                    while content != ' ':
+                        tk.messagebox.showinfo('Info', content)
+                        content = pickle.load(file_obj)
                         
-                    except EOFError as err:
-                        pass
-                
-            except FileNotFoundError as err:
-                tk.messagebox.showinfo('Info', 'File not found')
+                    file_obj.close()
+                    
+                except EOFError as err:
+                    pass
+            
+        except FileNotFoundError as err:
+            tk.messagebox.showinfo('Info', 'File not found')
   
         
 my_gui = MyGUI()
