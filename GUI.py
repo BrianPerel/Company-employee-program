@@ -1,7 +1,10 @@
 '''
 Author @ Brian Perel
-GUI Employee Management System
--> Python program that will store information\nabout employees in a company using a dictionary.\nUses an employee class to set and get employee attributes. 
+GUI Employee Management System using XAMPP and sql-connect module
+-> Python UI program that will store information about employees in a company using a dictionary with remove, update, loop up operations
+-> Uses an employee class to set and get employee attributes
+
+-> Programs requires user to start XAMPP, Apache server and MySQL module 
 '''
 
 import tkinter as tk 
@@ -14,7 +17,7 @@ import pickle
 
 class MyGUI:    
     def __init__(self):
-        ''' create and place main gui window, buttons, labels, entry's, canvas line '''
+        ''' create and place main gui window, buttons, labels, entry's, and a canvas line '''
         self.main_window = tk.Tk() # make the GUI window
         self.main_window.geometry('520x390') # width x height
         self.main_window.configure(background='lightgrey')
@@ -51,6 +54,7 @@ class MyGUI:
                             font = 'Courier 10', \
                             command = self.add_employee)
 
+        # create label 
         self.label2 = tk.Label(text = '\tEmployee Name:', font = 'Courier 10', \
                                                                bg='lightgrey')
 
@@ -60,7 +64,7 @@ class MyGUI:
         self.output_entry1 = tk.Entry(width = 20, \
                             textvariable = self.output_entry_var1)
 
-        # GUI buttons
+        # GUI buttons (update employee)
         self.my_button3 = tk.Button(text = 'Update Employee', \
                                     font = 'Courier 10', \
                                     command = self.update_employee)
@@ -73,7 +77,7 @@ class MyGUI:
         self.output_entry2 = tk.Entry(width = 20, \
                                 textvariable = self.output_entry_var2)
 
-        # GUI buttons
+        # GUI buttons (delete employee) 
         self.my_button4 = tk.Button(text = 'Delete Employee', \
                                         font = 'Courier 10', \
                                         command = self.delete_employee)
@@ -115,8 +119,11 @@ class MyGUI:
         #GUI buttons
         self.reset_button = tk.Button(text='Reset System', font = 'Courier 10', \
                                            command = self.reset_system)
-        
-        self.quit_button = tk.Button(text='Quit Program', font = 'Courier 10', command = self.main_window.destroy)
+
+
+        self.quit_button = tk.Button(text='Quit Program', font = 'Courier 10',
+        command = self.main_window.destroy)
+
 
         self.load_button = tk.Button(text='Load File', font = 'Courier 10', command = self.load_file)
 
@@ -138,7 +145,7 @@ class MyGUI:
         if self.cb_var1.get() == 1:
             self.mydb.close()
 
-        # make program position and display
+        # make program position and display all gui components 
         self.header.place(x = 120, y = 0)
         self.canvas.place(x = 10, y = 20)
         self.my_button1.place(x = 10, y = 65)
@@ -175,13 +182,11 @@ class MyGUI:
             # already exist in folder 
             file_obj = open('Employees.dat', 'wb')
             file_obj.close()
-
+        
         self.main_window.mainloop()
 
 
 
-
-        
 
 # App operations:
 
@@ -198,6 +203,7 @@ class MyGUI:
             self.mydb = mysql.connector.connect(
                 host='localhost', user='root', passwd='', database='employee_db')
 
+        # if can't connect 
         except mysql.connector.Error as err:
             self.mydb = mysql.connector.connect(
                 host='loclhost', user='root', passwd='')
@@ -221,6 +227,7 @@ class MyGUI:
         # ternary operator 
         message = self.employees.get(ID) if (ID in self.employees) else 'No employee found of this ID'
 
+        # create a showinfo message box 
         tk.messagebox.showinfo('Employee Info', str(message))
 
         # set all entry widgets to a blank value
@@ -265,7 +272,8 @@ class MyGUI:
         # get values from entry box widget
         check = True
         work_type = ''
-        
+
+        # get all data from gui and assign to fields 
         try:
             ID = self.output_entry.get()
             name = self.output_entry1.get()
@@ -273,8 +281,9 @@ class MyGUI:
             title = self.output_entry3.get()
             pay_rate = self.output_entry4.get()
             phone_number = self.output_entry5.get()
-            
-            int(ID)
+
+            # perform cast operations 
+            int(ID) 
             float(pay_rate)
             
             
@@ -310,7 +319,8 @@ class MyGUI:
                             Title VARCHAR(30), Pay_Rate VARCHAR(30), \
                             Phone_Number VARCHAR(30), Work_Type VARCHAR(30))')
 
-        
+
+        # conditional statement to add employee into dictionary 
         if ID not in self.employees and len(phone_number) == 12 and check == True and len(ID) == 6 and name != '' \
            and dept != '' and title != '' and pay_rate != '' \
            and phone_number != '' and work_type != '' and pattern1 == True \
@@ -323,6 +333,7 @@ class MyGUI:
             index = pay_rate.find(pay_rate)
             pay_rate = pay_rate[:index] + '$' + pay_rate[index:]
 
+            # serialize the object 
             file_obj = open('Employees.dat', 'ab')
             pickle.dump(new_emp, file_obj)
             
@@ -336,7 +347,7 @@ class MyGUI:
             self.mycursor.execute(sql, val)
             self.mydb.commit()
 
-    
+        
         elif ID == '' or name == '' or dept == '' or title == '' \
              or pay_rate == '' or phone_number == '' or work_type == '' \
              or check == False or len(ID) < 6 or len(ID) > 6 or pattern1 == False \
@@ -346,6 +357,7 @@ class MyGUI:
         elif ID in self.employees:
             message = 'An employee with that ID already exists.'
 
+        # show info message box with data 
         tk.messagebox.showinfo('Info', message)
         
         # set all entry widgets to a blank value
@@ -392,6 +404,7 @@ class MyGUI:
             title, pay_rate = self.output_entry3.get(), self.output_entry4.get()
             phone_number = self.output_entry5.get()
 
+            # create radio buttons: 0 is none selected, 1 is first circle, 2 is second 
             if self.radio_var.get() == 0:
                 tk.messagebox.showinfo('Info', 'Couldn\'t update employees info')
             elif self.radio_var.get() == 1:
@@ -565,4 +578,4 @@ class MyGUI:
             tk.messagebox.showinfo('Info', 'File not found')
   
         
-my_gui = MyGUI()
+my_gui = MyGUI() # create instance of MyGUI class
