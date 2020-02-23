@@ -28,10 +28,12 @@ class MyGUI:
         self.header = tk.Label(text = 'EMPLOYEE MANAGEMENT SYSTEM',
                                font = 'Times 12 bold', bg='lightgrey')
 
+        # build line between header and body of app 
         self.canvas = tk.Canvas(self.main_window, width=495, height=40, bd=0, \
                             borderwidth=0, bg='lightgrey', highlightthickness=0.5, \
                             highlightbackground='lightgrey')
 
+        # create line between header and body of app 
         self.canvas.create_line(2, 25, 800, 25)
                 
         # GUI button 1
@@ -58,9 +60,10 @@ class MyGUI:
         self.label2 = tk.Label(text = '\tEmployee Name:', font = 'Courier 10', \
                                                                bg='lightgrey')
 
-        # create a StringVar variable to stroe value input into entry box widget 
+        # create a StringVar variable to store value input into entry box widget 
         self.output_entry_var1 = tk.StringVar()
 
+        # take entry box variable and perform action  
         self.output_entry1 = tk.Entry(width = 20, \
                             textvariable = self.output_entry_var1)
 
@@ -127,10 +130,12 @@ class MyGUI:
 
         self.load_button = tk.Button(text='Load File', font = 'Courier 10', command = self.load_file)
 
+        # build line between body of app and footer 
         self.canvas2 = tk.Canvas(self.main_window, width=495, height=40, bd=0, \
                             borderwidth=0, bg='lightgrey', highlightthickness=0.5, \
                             highlightbackground='lightgrey')
 
+        # create line between body of app and footer 
         self.canvas2.create_line(2, 25, 800, 25)
 
 
@@ -145,7 +150,7 @@ class MyGUI:
         if self.cb_var1.get() == 1:
             self.mydb.close()
 
-        # make program position and display all gui components 
+        # make program position and display all gui components (widgets) 
         self.header.place(x = 120, y = 0)
         self.canvas.place(x = 10, y = 20)
         self.my_button1.place(x = 10, y = 65)
@@ -182,7 +187,8 @@ class MyGUI:
             # already exist in folder 
             file_obj = open('Employees.dat', 'wb')
             file_obj.close()
-        
+
+        # statement needed to launch gui window 
         self.main_window.mainloop()
 
 
@@ -203,7 +209,7 @@ class MyGUI:
             self.mydb = mysql.connector.connect(
                 host='localhost', user='root', passwd='', database='employee_db')
 
-        # if can't connect 
+        # if can't connect to db then db doesn't exist. Just connect to localhost
         except mysql.connector.Error as err:
             self.mydb = mysql.connector.connect(
                 host='loclhost', user='root', passwd='')
@@ -300,7 +306,8 @@ class MyGUI:
         
         pattern3 = bool(re.match('[a-zA-Z]+', title))
         title_hasdigit = any(item.isdigit() for item in title)
-        
+
+        # value of 1 stands for part time radio button option, 2 for full time option 
         if self.radio_var.get() == 1:
             work_type = 'Part time'
         elif self.radio_var.get() == 2:
@@ -308,7 +315,6 @@ class MyGUI:
 
         pay_rate = format(float(pay_rate), '.2f')
         pay_rate = str(pay_rate)
-
 
         # create instance and send the values 
         new_emp = EMS.Employee(
@@ -320,7 +326,7 @@ class MyGUI:
                             Phone_Number VARCHAR(30), Work_Type VARCHAR(30))')
 
 
-        # conditional statement to add employee into dictionary 
+        # conditional statement to add employee into dictionary
         if ID not in self.employees and len(phone_number) == 12 and check == True and len(ID) == 6 and name != '' \
            and dept != '' and title != '' and pay_rate != '' \
            and phone_number != '' and work_type != '' and pattern1 == True \
@@ -339,7 +345,7 @@ class MyGUI:
             
             file_obj.close()
 
-            
+            # insert data into db table 
             sql = 'INSERT INTO employees (ID, Name, Deptartment, Title, \
             Pay_Rate, Phone_Number, Work_Type) values (%s, %s, %s, %s, %s, %s, %s)'
                 
@@ -347,7 +353,7 @@ class MyGUI:
             self.mycursor.execute(sql, val)
             self.mydb.commit()
 
-        
+        # input validation: make sure no fields are blank  
         elif ID == '' or name == '' or dept == '' or title == '' \
              or pay_rate == '' or phone_number == '' or work_type == '' \
              or check == False or len(ID) < 6 or len(ID) > 6 or pattern1 == False \
@@ -373,6 +379,7 @@ class MyGUI:
             self.mydb = mysql.connector.connect(
                 host='localhost', user='root', passwd='', database='employee_db')
 
+        # if db doesn't exist then just connect/login into localhost site 
         except mysql.connector.Error as err:
             self.mydb = mysql.connector.connect(
                 host='loclhost', user='root', passwd='')
@@ -398,7 +405,7 @@ class MyGUI:
 
         except ValueError as err:
             check = False
-            
+
         if ID in self.employees:
             name, dept = self.output_entry1.get(), self.output_entry2.get()
             title, pay_rate = self.output_entry3.get(), self.output_entry4.get()
@@ -414,7 +421,8 @@ class MyGUI:
 
             new_emp = EMS.Employee(name, ID, dept, \
                                     title, pay_rate, phone_number, work_type)
-            
+
+            # store employee object in employee dictionary, the dictionary's key is the employee's ID 
             self.employees[ID] = new_emp
 
             check = 'SELECT * FROM employees WHERE ID = %s'
