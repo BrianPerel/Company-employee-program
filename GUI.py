@@ -228,12 +228,13 @@ class MyGUI:
         # if can't connect to db then db doesn't exist. Just connect to localhost site 
         except mysql.connector.Error as err:
             self.mydb = mysql.connector.connect(
-                host='loclhost', user='root', passwd='')
+                host='localhost', user='root', passwd='')
 
+    
         # create the empty databaase and table 
         self.mycursor = self.mydb.cursor(buffered=True)
-        self.mycursor.execute('CREATE DATABASE IF NOT EXISTS b15_24632681_employee_db')
-        self.mycursor.execute('use b15_24632681_employee_db')
+        self.mycursor.execute('CREATE DATABASE IF NOT EXISTS employee_db')
+        self.mycursor.execute('use employee_db')
         self.mycursor.execute('CREATE TABLE IF NOT EXISTS employees (ID INT, \
                             Name VARCHAR(30), Deptartment VARCHAR(30),\
                             Title VARCHAR(30), Pay_Rate VARCHAR(30), \
@@ -278,12 +279,12 @@ class MyGUI:
 
         except mysql.connector.Error as err:
             self.mydb = mysql.connector.connect(
-                host='loclhost', user='root', passwd='')
+                host='localhost', user='root', passwd='')
 
         # create the empty databaase and table 
         self.mycursor = self.mydb.cursor(buffered=True)
-        self.mycursor.execute('CREATE DATABASE IF NOT EXISTS b15_24632681_employee_db')
-        self.mycursor.execute('use b15_24632681_employee_db')
+        self.mycursor.execute('CREATE DATABASE IF NOT EXISTS employee_db')
+        self.mycursor.execute('use employee_db')
         self.mycursor.execute('CREATE TABLE IF NOT EXISTS employees (ID INT, \
                             Name VARCHAR(30), Deptartment VARCHAR(30),\
                             Title VARCHAR(30), Pay_Rate VARCHAR(30), \
@@ -402,8 +403,8 @@ class MyGUI:
 
         # create the empty databaase and table 
         self.mycursor = self.mydb.cursor(buffered=True)
-        self.mycursor.execute('CREATE DATABASE IF NOT EXISTS b15_24632681_employee_db')
-        self.mycursor.execute('use b15_24632681_employee_db')
+        self.mycursor.execute('CREATE DATABASE IF NOT EXISTS employee_db')
+        self.mycursor.execute('use employee_db')
         self.mycursor.execute('CREATE TABLE IF NOT EXISTS employees (ID INT, \
                             Name VARCHAR(30), Deptartment VARCHAR(30),\
                             Title VARCHAR(30), Pay_Rate VARCHAR(30), \
@@ -478,7 +479,7 @@ class MyGUI:
 
         # create the empty databaase and table 
         self.mycursor = self.mydb.cursor(buffered=True)
-        self.mycursor.execute('CREATE DATABASE IF NOT EXISTS b15_24632681_employee_db')
+        self.mycursor.execute('CREATE DATABASE IF NOT EXISTS employee_db')
         self.mycursor.execute('use b15_24632681_employee_db')
         self.mycursor.execute('CREATE TABLE IF NOT EXISTS employees (ID INT, \
                             Name VARCHAR(30), Deptartment VARCHAR(30),\
@@ -527,8 +528,8 @@ class MyGUI:
 
         # create the empty databaase and table 
         self.mycursor = self.mydb.cursor(buffered=True)
-        self.mycursor.execute('CREATE DATABASE IF NOT EXISTS b15_24632681_employee_db')
-        self.mycursor.execute('use b15_24632681_employee_db')
+        self.mycursor.execute('CREATE DATABASE IF NOT EXISTS employee_db')
+        self.mycursor.execute('use employee_db')
         self.mycursor.execute('CREATE TABLE IF NOT EXISTS employees (ID INT, \
                             Name VARCHAR(30), Deptartment VARCHAR(30),\
                             Title VARCHAR(30), Pay_Rate VARCHAR(30), \
@@ -568,8 +569,8 @@ class MyGUI:
 
         # create the empty databaase and table 
         self.mycursor = self.mydb.cursor(buffered=True)
-        self.mycursor.execute('CREATE DATABASE IF NOT EXISTS b15_24632681_employee_db')
-        self.mycursor.execute('use b15_24632681_employee_db')
+        self.mycursor.execute('CREATE DATABASE IF NOT EXISTS employee_db')
+        self.mycursor.execute('use employee_db')
         self.mycursor.execute('CREATE TABLE IF NOT EXISTS employees (ID INT, \
                             Name VARCHAR(30), Deptartment VARCHAR(30),\
                             Title VARCHAR(30), Pay_Rate VARCHAR(30), \
