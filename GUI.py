@@ -20,8 +20,8 @@ class MyGUI:
         ''' create and place main gui window, buttons, labels, entry's, and a canvas line '''
         self.main_window = tk.Tk() # make the GUI window
         self.main_window.geometry('520x390') # width x height
-        self.main_window.configure(background='lightgrey')
-        self.main_window.title('Company')
+        self.main_window.configure(background='lightgrey') # app background color 
+        self.main_window.title('Company') # app title 
         
 
         # create a GUI label (display EMPLOYEE MANAGEMENT SYSTEM) = the header of the GUI app
@@ -67,16 +67,18 @@ class MyGUI:
         self.output_entry1 = tk.Entry(width = 20, \
                             textvariable = self.output_entry_var1)
 
-        # GUI buttons (update employee)
+        # GUI button (update employee)
         self.my_button3 = tk.Button(text = 'Update Employee', \
                                     font = 'Courier 10', \
                                     command = self.update_employee)
 
         self.label3 = tk.Label(text = '\tEmployee Dept:', font = 'Courier 10', \
                                                        bg='lightgrey')
-
+        
+        # create a StringVar variable to store value input into entry box widget 
         self.output_entry_var2 = tk.StringVar()
-
+        
+        # take entry box variable and perform action  
         self.output_entry2 = tk.Entry(width = 20, \
                                 textvariable = self.output_entry_var2)
 
@@ -85,23 +87,29 @@ class MyGUI:
                                         font = 'Courier 10', \
                                         command = self.delete_employee)
 
+        # display formatted label 
         self.label4 = tk.Label(text = '\tEmployee Title:', font = 'Courier 10', \
                                                        bg='lightgrey')
 
+        # create a StringVar variable to store value input into entry box widget 
         self.output_entry_var3 = tk.StringVar()
 
+        # take entry box variable and perform action  
         self.output_entry3 = tk.Entry(width = 20, \
                                     textvariable = self.output_entry_var3)
 
-
+        # display formatted label 
         self.label5 = tk.Label(text = '\tPay Rate:', font = 'Courier 10', \
                                                         bg='lightgrey')
 
+        # create a StringVar variable to store value input into entry box widget 
         self.output_entry_var4 = tk.StringVar()
 
+        # take entry box variable and perform action  
         self.output_entry4 = tk.Entry(width = 20, \
                                     textvariable = self.output_entry_var4)
 
+        # display formatted label 
         self.label6 = tk.Label(text = '\tPhone Number:', font = 'Courier 10', \
                                                         bg='lightgrey')
 
@@ -110,20 +118,24 @@ class MyGUI:
         self.output_entry5 = tk.Entry(width = 20, \
                                     textvariable = self.output_entry_var5)
 
+        # store input value from app into radio button variable 
         self.radio_var = tk.IntVar()
+        # reset radio button variable to option blank (0) 
         self.radio_var.set(0)
-        
+
+        # create radio button
         self.rb1 = tk.Radiobutton(text='Part Time Employee', variable=self.radio_var, \
                                     bg='lightgrey', value=1)
 
+        # create radio button 
         self.rb2 = tk.Radiobutton(text='Full Time Employee', variable=self.radio_var, \
                                     bg='lightgrey', value=2)
 
-        #GUI buttons
+        #GUI formatted buttons, call appropriate method when clicked 
         self.reset_button = tk.Button(text='Reset System', font = 'Courier 10', \
                                            command = self.reset_system)
 
-
+        
         self.quit_button = tk.Button(text='Quit Program', font = 'Courier 10',
         command = self.main_window.destroy)
 
@@ -139,14 +151,18 @@ class MyGUI:
         self.canvas2.create_line(2, 25, 800, 25)
 
 
+        # display formatted label in app 
         self.label7 = tk.Label(text = 'developed by Brian Perel', font = 'Courier 10', \
                                                         bg='lightgrey')
 
 
+        # store app input value into check box variable 
         self.cb_var1 = tk.IntVar()
+
         self.cb_var1.set(0)
         self.conn_close = tk.Checkbutton(text='Close MySQL Connection', variable = self.cb_var1, bg='lightgrey')
 
+        # Value 1 stands for checked check box, if user puts checkmark, we close the db connection to localhost 
         if self.cb_var1.get() == 1:
             self.mydb.close()
 
@@ -209,7 +225,7 @@ class MyGUI:
             self.mydb = mysql.connector.connect(
                 host='localhost', user='root', passwd='', database='employee_db')
 
-        # if can't connect to db then db doesn't exist. Just connect to localhost
+        # if can't connect to db then db doesn't exist. Just connect to localhost site 
         except mysql.connector.Error as err:
             self.mydb = mysql.connector.connect(
                 host='loclhost', user='root', passwd='')
@@ -279,7 +295,7 @@ class MyGUI:
         check = True
         work_type = ''
 
-        # get all data from gui and assign to fields 
+        # get all data from gui and assign to dictionary values 
         try:
             ID = self.output_entry.get()
             name = self.output_entry1.get()
@@ -288,7 +304,7 @@ class MyGUI:
             pay_rate = self.output_entry4.get()
             phone_number = self.output_entry5.get()
 
-            # perform cast operations 
+            # perform cast operations, since ID should be only INT (whole) value and pay_rate only float (decimal) 
             int(ID) 
             float(pay_rate)
             
@@ -297,7 +313,7 @@ class MyGUI:
             check = False 
 
         # use regular expressions to check format of info given
-        # name, dept, title should all only contain letters, nums are contained then mark 
+        # name, dept, title should all only contain letters, if nums are contained then mark 
         pattern1 = bool(re.match('[a-zA-Z]+', name))
         name_hasdigit = any(item.isdigit() for item in name)
         
@@ -426,7 +442,7 @@ class MyGUI:
             self.employees[ID] = new_emp
 
             check = 'SELECT * FROM employees WHERE ID = %s'
-            self.mycursor.execute(check, (ID,))
+            self.mycursor.execute(check, (ID,)) # execute sql statement with above statement as arg 
                 
             sql = 'UPDATE employees SET Name=%s, Deptartment=%s, Title=%s, Pay_Rate=%s, Phone_Number=%s, Work_Type=%s WHERE ID=%s'
             val = (f'{name}', f'{dept}', f'{title}', f'{pay_rate}', f'{phone_number}', f'{work_type}', f'{ID}')
@@ -483,6 +499,7 @@ class MyGUI:
         except mysql.connector.Error as err:
             pass
 
+        # to delete an employee, must be in db. Perform this check 
         if ID in self.employees:
             del self.employees[ID]
             message = 'Employee information deleted'
