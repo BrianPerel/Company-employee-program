@@ -21,7 +21,14 @@ class MyGUI:
         self.main_window = tk.Tk() # make the GUI window
         self.main_window.geometry('520x390') # width x height
         self.main_window.configure(background='lightgrey') # app background color 
-        self.main_window.title('Company') # app title 
+        self.main_window.title('Company') # app title
+
+        # start xampp app 
+        try:
+           os.startfile('C:\\xampp\\xampp-control.exe')
+
+        except Exception as e:
+            print(str(e))
         
 
         # create a GUI label (display EMPLOYEE MANAGEMENT SYSTEM) = the header of the GUI app
@@ -137,7 +144,7 @@ class MyGUI:
 
         
         self.quit_button = tk.Button(text='Quit Program', font = 'Courier 10',
-        command = self.main_window.destroy)
+        command = self.closeFunc)
 
 
         self.load_button = tk.Button(text='Load File', font = 'Courier 10', command = self.load_file)
@@ -217,6 +224,14 @@ class MyGUI:
     # create the empty dictionary
     employees = {}
 
+    def closeFunc(self):
+
+        # close xampp app 
+        os.system("TASKKILL /F /IM xampp-control.exe")
+
+        # close gui window            
+        self.main_window.destroy()
+
 
     def look_up_employee(self):
 
@@ -233,14 +248,6 @@ class MyGUI:
     
         # create the empty databaase and table 
         self.mycursor = self.mydb.cursor(buffered=True)
-        self.mycursor.execute('CREATE DATABASE IF NOT EXISTS employee_db')
-        self.mycursor.execute('use employee_db')
-        self.mycursor.execute('CREATE TABLE IF NOT EXISTS employees (ID INT, \
-                            Name VARCHAR(30), Deptartment VARCHAR(30),\
-                            Title VARCHAR(30), Pay_Rate VARCHAR(30), \
-                            Phone_Number VARCHAR(30), \
-                            Work_Type VARCHAR(30))')
-
     
         ''' function to look up an employee's info in dictionary,
         by the ID attained from GUI '''
@@ -306,12 +313,17 @@ class MyGUI:
             phone_number = self.output_entry5.get()
 
             # perform cast operations, since ID should be only INT (whole) value and pay_rate only float (decimal) 
-            int(ID) 
-            float(pay_rate)
-            
+            int(ID)             
             
         except ValueError:
-            check = False 
+            check = False
+
+        # if user entered phone number without including dashes, manually attach them 
+        if "-" not in phone_number:
+            p1 = phone_number[:3]
+            p2 = phone_number[3:6]
+            p3 = phone_number[6:10]
+            phone_number = p1 + '-' + p2 + '-' + p3
 
         # use regular expressions to check format of info given
         # name, dept, title should all only contain letters, if nums are contained then mark 
@@ -330,6 +342,19 @@ class MyGUI:
         elif self.radio_var.get() == 2:
             work_type = 'Full time'
 
+        # if user provides a pay rate 
+        if(len(pay_rate) == 0):
+            message = 'Could not add employee.'
+            
+            # show info message box with data 
+            tk.messagebox.showinfo('Info', message)
+            return
+
+        # if user entered $ in pay_rate, remove it to enable casting to float which we do to format the number 
+        if("$" in pay_rate):
+           pay_rate = pay_rate.replace("$", "")
+
+        # cast to float and format number, cast pay_rate back to string 
         pay_rate = format(float(pay_rate), '.2f')
         pay_rate = str(pay_rate)
 
@@ -341,7 +366,6 @@ class MyGUI:
                             Name VARCHAR(30), Deptartment VARCHAR(30), \
                             Title VARCHAR(30), Pay_Rate VARCHAR(30), \
                             Phone_Number VARCHAR(30), Work_Type VARCHAR(30))')
-
 
         # conditional statement to add employee into dictionary
         if ID not in self.employees and len(phone_number) == 12 and check == True and len(ID) == 6 and name != '' \
@@ -370,6 +394,7 @@ class MyGUI:
             self.mycursor.execute(sql, val)
             self.mydb.commit()
 
+        
         # input validation: make sure no fields are blank  
         elif ID == '' or name == '' or dept == '' or title == '' \
              or pay_rate == '' or phone_number == '' or work_type == '' \
@@ -399,7 +424,7 @@ class MyGUI:
         # if db doesn't exist then just connect/login into localhost site 
         except mysql.connector.Error as err:
             self.mydb = mysql.connector.connect(
-                host='loclhost', user='root', passwd='')
+                host='localhost', user='root', passwd='')
 
         # create the empty databaase and table 
         self.mycursor = self.mydb.cursor(buffered=True)
@@ -475,17 +500,10 @@ class MyGUI:
 
         except mysql.connector.Error as err:
             self.mydb = mysql.connector.connect(
-                host='loclhost', user='root', passwd='')
+                host='localhost', user='root', passwd='')
 
         # create the empty databaase and table 
         self.mycursor = self.mydb.cursor(buffered=True)
-        self.mycursor.execute('CREATE DATABASE IF NOT EXISTS employee_db')
-        self.mycursor.execute('use b15_24632681_employee_db')
-        self.mycursor.execute('CREATE TABLE IF NOT EXISTS employees (ID INT, \
-                            Name VARCHAR(30), Deptartment VARCHAR(30),\
-                            Title VARCHAR(30), Pay_Rate VARCHAR(30), \
-                            Phone_Number VARCHAR(30), \
-                            Work_Type VARCHAR(30))')
         
         ''' function to delete an employee from app, by locating it
             by ID in dictionary '''
@@ -524,7 +542,7 @@ class MyGUI:
 
         except mysql.connector.Error as err:
             self.mydb = mysql.connector.connect(
-                host='loclhost', user='root', passwd='')
+                host='localhost', user='root', passwd='')
 
         # create the empty databaase and table 
         self.mycursor = self.mydb.cursor(buffered=True)
@@ -565,7 +583,7 @@ class MyGUI:
 
         except mysql.connector.Error as err:
             self.mydb = mysql.connector.connect(
-                host='loclhost', user='root', passwd='')
+                host='localhost', user='root', passwd='')
 
         # create the empty databaase and table 
         self.mycursor = self.mydb.cursor(buffered=True)
