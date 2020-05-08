@@ -6,4 +6,4 @@ You will need to open the xampp control panel and have Apache and MySQL running 
 
 # pyinstaller --noconsole --onefile GUI.py --icon=icon.ico --name App
 
-[Check it out here](https://brianperel.github.io/Project2.htm)
+[Check it out here](https://brianperel.github.io/project2.htm)
